@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Services\RazorpayService;
 use App\Services\ShipRocketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
+use App\Models\User;
 
 class OrderController extends Controller
 {
@@ -41,7 +43,6 @@ class OrderController extends Controller
             $total = (int)$item->product->price * $item->quantity;
             $grandTotal += $total;
         }
-
         $order = new Order;
         $order->user_id = $request->user_id;
 
@@ -59,13 +60,20 @@ class OrderController extends Controller
         $order->total = $grandTotal;
         $res = $order->save();
 
-        if ($res) {
-            Cart::where('user_id', $request->user_id)->delete();
-        }
+        // if ($res) {
+        //     Cart::where('user_id', $request->user_id)->delete();
+        // }
 
+        $user = User::where('id', $request->user_id)->first();
         $order = Order::where('user_id', $request->user_id)->first(); // <- Question
 
-        (new ShipRocketService())->createOrder($order);
+        // (new ShipRocketService())->createOrder($order); // Calling ShipRocket api
+
+        $amount = $order->total;
+        $transaction_id = $order->id; //Order id of the Order
+
+        $pay_detail = (new RazorpayService())->createOrder($transaction_id,$amount, $user);
+        dd($pay_detail);
 
         return response()->json([
             'msg' => 'Order placed',

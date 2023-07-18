@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col mt-5">
             <h1 class="text-center">Payment Area</h1>
-            <form method="POST" action="/payment">
+            <form method="POST" action="{{route('pay')}}">
                 @csrf
                 <div class="form-group">
                     <label for="exampleInputEmail1" class=" m-1">Name</label>

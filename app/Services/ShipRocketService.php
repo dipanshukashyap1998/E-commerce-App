@@ -71,8 +71,9 @@ class ShipRocketService
                 $record['tax'] = "0";
                 $record['hsn'] = "441122";
                 $orderItems[] = $record;
-            } 
-
+            }
+            $s_details = json_decode($order->shipping_details,true);
+    
             $httpRequest = Http::contentType('application/json')
                 ->withToken($token)->post($this->baseURL . self::CREATE_ORDER_URL, [
                     'order_id' => $order->id,
@@ -82,14 +83,14 @@ class ShipRocketService
                     'comment' => '',
                     "billing_customer_name" => $user['name'],
                     "billing_last_name" => "",
-                    "billing_address" => $order->shipping_details['address'],
+                    "billing_address" => $s_details['address'],
                     "billing_address_2" => "",
                     "billing_city" => "",
-                    "billing_pincode" => $order->shipping_details['pincode'],
-                    "billing_state" => "Punjab",
+                    "billing_pincode" => $s_details['pincode'],
+                    "billing_state" => $s_details['state'],
                     "billing_country" => "India",
                     "billing_email" => $user['email'],
-                    "billing_phone" => $order->shipping_details['phone'],
+                    "billing_phone" => $s_details['phone'],
                     "shipping_is_billing" => true,
                     "shipping_customer_name" => "",
                     "shipping_last_name" => "",
