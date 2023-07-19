@@ -72,13 +72,34 @@ class OrderController extends Controller
         $amount = $order->total;
         $transaction_id = $order->id; //Order id of the Order
 
-        $pay_detail = (new RazorpayService())->createOrder($transaction_id,$amount, $user);
-        dd($pay_detail);
+        $pay_detail = (new RazorpayService())->createOrder($transaction_id, $amount, $user);
+
+        // (new RazorpayService())->verifyTransaction($transaction_detail);
 
         return response()->json([
             'msg' => 'Order placed',
             'data' => $order,
         ]);
+    }
+
+    public function proccessOrder(Request $request)
+    {
+        $order_id = $request->order_id;
+        $payment_id = $request-> payment_id;
+        $signature = $request->signature;
+        // dd($order_id,$payment_id,$signature);
+        $res = (new RazorpayService())->verifyTransaction($order_id,$payment_id,$signature);
+        
+        if($res)
+        {
+            return response()->json([
+                'msg' => 'Success'
+            ],200);
+        }else{
+            return response()->json([
+                'msg' => 'Failed'
+            ],400);
+        }
     }
 
     /**

@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('order', OrderController::class);
     Route::apiResource('users', userController::class);
     Route::post('change_password', [LoginController::class, 'change_password']);
+    Route::post('verify', [OrderController::class, 'proccessOrder']);
 });
 
 
