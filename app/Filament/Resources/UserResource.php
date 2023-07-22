@@ -2,20 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CategoryResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
@@ -24,7 +25,9 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')->required(),
-                Forms\Components\TextInput::make('slug')->required(),
+                Forms\Components\TextInput::make('password')->required(),
+                Forms\Components\TextInput::make('email')->required(),
+                Forms\Components\TextInput::make('phone')->required(),
             ]);
     }
 
@@ -33,10 +36,12 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone'),
+                ToggleColumn::make('admin'),
             ])
             ->filters([
-                // 
+                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -58,9 +63,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

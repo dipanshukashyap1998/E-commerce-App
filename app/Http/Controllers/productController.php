@@ -50,7 +50,7 @@ class productController extends Controller
         } else {
             $product = new Product;
             $product->name = $request->name;
-            $product->slug = strtolower($request->name);
+            $product->slug = $request->slug;
             $product->price = $request->price;
             $product->image = $request->image;
             $product->description = $request->description;

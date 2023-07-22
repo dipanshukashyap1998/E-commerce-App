@@ -12,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -26,12 +27,13 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')->required(),
+                Forms\Components\TextInput::make('slug')->required(),
                 Forms\Components\TextInput::make('price')->required(),
                 Forms\Components\TextInput::make('description')->required(),
                 Forms\Components\TextInput::make('quantity')->required(),
-                Select::make('category_id')->multiple()->relationship('categories','name')->required(),
-                Forms\Components\TextInput::make('status'),
-                FileUpload::make('image'),
+                Select::make('category_id')->relationship('categories', 'name')->required(),
+                Forms\Components\TextInput::make('status')->default(1),
+                FileUpload::make('image')->image()->maxSize(2048)
             ]);
     }
 
@@ -40,12 +42,14 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('slug'),
                 Tables\Columns\TextColumn::make('price'),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('quantity'),
-                Tables\Columns\TextColumn::make('categories'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('categories.name'),
+                // Tables\Columns\TextColumn::make('status'),
+                ToggleColumn::make('status')
             ])
             ->filters([
                 //

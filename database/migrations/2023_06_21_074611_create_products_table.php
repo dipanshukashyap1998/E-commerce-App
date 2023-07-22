@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('price');
             $table->string('description',1000);
             $table->string('image');
-            $table->string('status');
+            $table->string('status')->default('1');
             $table->integer('quantity')->unsigned();
             $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();
